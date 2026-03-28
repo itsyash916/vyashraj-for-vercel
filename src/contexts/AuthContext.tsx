@@ -82,9 +82,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, [fetchProfile, checkAdmin]);
 
   const signInWithGoogle = async () => {
-    await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin,
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: window.location.origin,
+      },
     });
+    
+    if (error) {
+      console.error("Error signing in with Google:", error.message);
+    }
   };
 
   const signOut = async () => {
